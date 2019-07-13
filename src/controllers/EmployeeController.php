@@ -7,7 +7,7 @@ namespace App\controllers;
 use App\helpers\Validator;
 use App\models\Employee;
 
-class EmployeeController extends Controller
+class EmployeeController
 {
     public function create()
     {
@@ -50,13 +50,9 @@ class EmployeeController extends Controller
         $employee = Employee::getEmployeeById($id);
         // Обработка формы
         if (isset($_POST['submit'])) {
-            // Если форма отправлена
-            // Получаем данные из формы
             $name = $_POST['name'];
             $email = $_POST['email'];
-            // Сохраняем изменения
             Employee::updateEmployee($id, $name, $email);
-            //  Перенаправляем пользователя на страницу управлениями юзерами
             header("Location: /employee");
         }
         require_once DIR . 'employee/update.php';

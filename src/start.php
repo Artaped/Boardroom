@@ -1,10 +1,7 @@
 <?php
 
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
-    //pages
-    $r->addRoute('GET', '/',["App\controllers\HomeController", "index"]);
-    $r->addRoute('GET', '/employee',["App\controllers\HomeController", "employeeList"]);
-    $r->addRoute('GET', '/rooms/{id:\d+}',["App\controllers\HomeController", "rooms"]);
+
     //Employee
     $r->addRoute('POST', '/employee/create',["App\controllers\EmployeeController", "create"]);
     $r->addRoute('GET', '/employee/create',["App\controllers\EmployeeController", "create"]);
@@ -12,11 +9,20 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/employee/update/{id:\d+}',["App\controllers\EmployeeController", "update"]);
     $r->addRoute('GET', '/employee/delete/{id:\d+}',["App\controllers\EmployeeController", "delete"]);
     //auth
-    $r->addRoute('POST', '/login',["App\controllers\AuthController", "login"]);
+    $r->addRoute('POST', '/',["App\controllers\AuthController", "login"]);
+    $r->addRoute('GET', '/',["App\controllers\AuthController", "login"]);
     $r->addRoute('GET', '/logout',["App\controllers\AuthController", "logout"]);
     //Events
+    $r->addRoute('POST', '/book/create',["App\controllers\EventController", "index"]);
     $r->addRoute('GET', '/book/create',["App\controllers\EventController", "index"]);
-    $r->addRoute('POST', '/book/storage',["App\controllers\EventController", "create"]);
+    $r->addRoute('POST', '/book/change',["App\controllers\EventController", "changeEvent"]);
+    $r->addRoute('GET', '/book/change',["App\controllers\EventController", "changeEvent"]);
+    $r->addRoute('GET', '/book/delete/{id:\d+}',["App\controllers\EventController", "delete"]);
+
+    //pages
+    $r->addRoute('GET', '/employee',["App\controllers\HomeController", "employeeList"]);
+    $r->addRoute('GET', '/rooms',["App\controllers\HomeController", "rooms"]);
+    //----------------------------------------------------------
     // {id} must be a number (\d+)
     $r->addRoute('GET', '/user/{id:\d+}', 'get_user_handler');
     // The /{title} suffix is optional

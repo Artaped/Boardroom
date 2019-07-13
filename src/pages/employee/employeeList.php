@@ -8,7 +8,7 @@
     <title>Document</title>
 </head>
 <body>
-<a href="/">Main page</a>
+<a href="/rooms">Main page</a>
 <h1>Employee List</h1>
 <table>
     <tr>
@@ -21,7 +21,12 @@
     foreach ($employees as $employee):?>
     <tr>
         <td><a href="mailto:<?=$employee['email']?>"><?=$employee['name']?></a></td>
-        <td><a onclick="return confirm('Are you sure you want to delete this contact?')" href="/employee/delete/<?=$employee['id']?>">Remove</a></td>
+        <td>
+            <a onclick="return confirm('Are you sure you want to delete this contact?')"
+               href="/employee/delete/<?=$employee['id']?>">
+               Remove
+            </a>
+        </td>
         <td><a href="/employee/update/<?=$employee['id']?>">Edit</a></td>
     </tr>
     <?php endforeach;?>

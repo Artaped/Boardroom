@@ -1,9 +1,13 @@
-<form action="/book/storage" method="post">
-    <p>Boardroom 1</p>
+<form action="#" method="post">
+    <select name="room">
+        <option value="1">Room 1</option>
+        <option value="2">Room 2</option>
+        <option value="3">Room 3</option>
+    </select>
     <div>
         1: Booked for: <br>
         <select name="employee">
-            <option value="1">All</option>
+            <option value="all">All</option>
             <?php if($employees):?>
             <?php foreach ($employees as $employee):?>
             <option value="<?php echo $employee['name']?>"><?php echo $employee['name']?></option>
@@ -41,7 +45,6 @@
                 <option value="10">10</option>
                 <option value="11">11</option>
                 <option value="12">12</option>
-                <option value="12">12</option>
                 <option value="13">13</option>
                 <option value="14">14</option>
                 <option value="15">15</option>
@@ -64,26 +67,26 @@
             </select>
             <select name="year">
                 <option value="19">2019</option>
-                <option value="19">2020</option>
-                <option value="19">2021</option>
-                <option value="19">2022</option>
-                <option value="19">2023</option>
-                <option value="19">2024</option>
-                <option value="19">2025</option>
-                <option value="19">2026</option>
-                <option value="19">2027</option>
-                <option value="19">2028</option>
-                <option value="19">2029</option>
-                <option value="19">2030</option>
-                <option value="19">2031</option>
-                <option value="19">2032</option>
-                <option value="19">2033</option>
-                <option value="19">2034</option>
-                <option value="19">2035</option>
-                <option value="19">2036</option>
-                <option value="19">2037</option>
-                <option value="19">2038</option>
-                <option value="19">2039</option>
+                <option value="20">2020</option>
+                <option value="21">2021</option>
+                <option value="22">2022</option>
+                <option value="23">2023</option>
+                <option value="24">2024</option>
+                <option value="25">2025</option>
+                <option value="26">2026</option>
+                <option value="27">2027</option>
+                <option value="28">2028</option>
+                <option value="29">2029</option>
+                <option value="30">2030</option>
+                <option value="31">2031</option>
+                <option value="32">2032</option>
+                <option value="33">2033</option>
+                <option value="34">2034</option>
+                <option value="35">2035</option>
+                <option value="36">2036</option>
+                <option value="37">2037</option>
+                <option value="38">2038</option>
+                <option value="39">2039</option>
             </select>
         </div>
     </div>
@@ -170,8 +173,8 @@
                 <option value="59">59</option>
             </select>
             <select name="start_pm">
-                <option value="pm">PM</option>
-                <option value="am">AM</option>
+                <option value="PM">PM</option>
+                <option value="AM">AM</option>
             </select>
         </div>
     </div>
@@ -258,8 +261,8 @@
                 <option value="59">59</option>
             </select>
             <select name="end_pm">
-                <option value="pm">PM</option>
-                <option value="am">AM</option>
+                <option value="PM">PM</option>
+                <option value="AM">AM</option>
             </select>
         </div>
     </div>
@@ -287,5 +290,16 @@
         (If you choose "bi-weekly" and put in an odd number of weeks, the computer will round down. )<br><br>
         <input type="text" name="numweek">duration (max 4 weeks)
     </div>
-    <button type="submit">submit</button>
+    <button type="submit" name="submit">submit</button>
 </form>
+<div>
+    <h3>
+        <?php if (isset($errors) && is_array($errors)): ?>
+            <ul>
+                <?php foreach ($errors as $error): ?>
+                    <li> <?php echo $error; ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </h3>
+</div>
