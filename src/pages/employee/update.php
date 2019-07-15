@@ -1,5 +1,5 @@
 <div>
-    <a href="/rooms/1">Room</a>
+    <a href="/rooms">Room</a>
 </div>
 <form action="#" method="post">
             <div>
@@ -16,3 +16,10 @@
                 </div>
             </div>
 </form>
+<h3>
+    <h3>
+        <?php $messenger->printError();?>
+        <?php $messenger->printResult();?>
+    </h3>
+</h3>
+

@@ -1,5 +1,5 @@
 <div>
-    <a href="/rooms/1">Room</a>
+    <a href="/rooms">Room</a>
 </div>
 <form action="#" method="post">
     <div>
@@ -19,13 +19,12 @@
 </form>
 <div>
     <h3>
-        <?php if (isset($errors) && is_array($errors)): ?>
-            <ul>
-                <?php foreach ($errors as $error): ?>
-                    <li> <?php echo $error; ?></li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
+        <h3>
+            <h3>
+                <?php $messenger->printError();?>
+                <?php $messenger->printResult();?>
+            </h3>
+        </h3>
     </h3>
 </div>
 

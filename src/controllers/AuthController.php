@@ -3,21 +3,16 @@
 
 namespace App\controllers;
 
-class AuthController
+class AuthController extends Controller
 {
     public function login()
     {
 
-        $name = false;
-        $email = false;
-        $result = false;
-        // Обработка формы
         if (isset($_POST['submit'])) {
-            // Если форма отправлена
-            // Получаем данные из формы
+
             $login = $_POST['login'];
             $password = $_POST['password'];
-            // Флаг ошибок
+
             $errors = false;
 
             if (strlen($login) < 2 || strlen($login) > 20) {
@@ -40,12 +35,19 @@ class AuthController
             }
         }
 
-        require_once DIR . "main.php";
+        echo $this->render(DIR .  "main.php",['errors'=>$errors]);
     }
 
     public function logout()
     {
         unset($_SESSION['name']);
         header("Location: /");
+    }
+    public static function checkAuth()
+    {
+        if (!isset($_SESSION['name'])) {
+            return false;
+        }
+        return true;
     }
 }

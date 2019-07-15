@@ -3,21 +3,23 @@
 
 namespace App\models;
 
-
-use App\helpers\Db;
 use PDO;
 
-class Event
+class Event extends Model
 {
-    public static function checkData($date)
+    /**
+     * @param $date event time
+     * @param $field "start_event or end_event"
+     * @param $room 1/2/3
+     * @return bool free time in this room or not
+     */
+    public function checkDate(String $date,String $field,int $room)
     {
-        // Соединение с БД
-        $db = Db::getConnection();
-        // Текст запроса к БД
-        $sql = 'SELECT COUNT(*) FROM event WHERE date = :date';
-        // Получение результатов. Используется подготовленный запрос
-        $result = $db->prepare($sql);
-        $result->bindParam(':email', $date, PDO::PARAM_STR);
+
+        $sql = "SELECT COUNT(*) FROM appointmens WHERE {$field} = :date AND room_event = :room ";
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':date', $date, PDO::PARAM_STR);
+        $result->bindParam(':room', $room, PDO::PARAM_STR);
         $result->execute();
         if ($result->fetchColumn()) {
             return true;
@@ -25,54 +27,82 @@ class Event
             return false;
         }
     }
-    public static function getAllEvent()
+
+    /**
+     * @return array
+     */
+    public function getAllEvent()
     {
 
-        // Соединение с БД
-        $db = Db::getConnection();
-
-        // Запрос к БД
-        $result = $db->query('SELECT * FROM appointmens ORDER BY start_event ASC');
-
-        // Получение и возврат результатов
-        $res = $result->fetchAll(\PDO::FETCH_ASSOC);
+        $result = $this->db->query('SELECT * FROM appointmens ORDER BY start_event ASC');
+        $res = $result->fetchAll(PDO::FETCH_ASSOC);
 
         return $res;
     }
-    public static function getAllEventByDate($date)
+
+    /**
+     * @param $date
+     * @param $room
+     * @return array
+     */
+    public function getAllEventByDate($date, $room)
     {
-
-        // Соединение с БД
-        $db = Db::getConnection();
-
-        // Запрос к БД
-        $sql = "SELECT * FROM appointmens WHERE start_event LIKE '{$date}-%' ORDER BY start_event ASC";
-        $result = $db->query($sql);
-
-        // Получение и возврат результатов
-        $res = $result->fetchAll(\PDO::FETCH_ASSOC);
+        $sql = "SELECT * FROM appointmens WHERE  start_event LIKE '{$date}-%' AND room_event = '{$room}' ORDER BY start_event ASC";
+        $result = $this->db->query($sql);
+        $res = $result->fetchAll(PDO::FETCH_ASSOC);
 
         return $res;
     }
-    public static function getEventById($id)
-    {
-        $db = Db::getConnection();
 
-        $sql = "SELECT * FROM appointmens WHERE id ='{$id}'";
-        $result = $db->query($sql);
-        $event = $result->fetch(\PDO::FETCH_ASSOC);
-        return $event;
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function getEventById($id)
+    {
+        $sql = "SELECT * FROM appointmens WHERE id = :id";
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':id', $id, PDO::PARAM_INT);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+        return $result->fetch();
 
     }
-    public static function deleteEventById($id)
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    public function deleteEventById($id)
     {
-        // Соединение с БД
-        $db = Db::getConnection();
-        // Текст запроса к БД
         $sql = 'DELETE FROM appointmens WHERE id = :id';
-        // Получение и возврат результатов. Используется подготовленный запрос
-        $result = $db->prepare($sql);
+        $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);
         return $result->execute();
+    }
+
+    /**
+     * @param $description
+     * @param $employee
+     * @param $start
+     * @param $end
+     * @param $isLong
+     * @param $room
+     * @param $dates
+     * @param $day
+     * @return false PDOStatement
+     */
+    public function addEvent($description, $employee, $start, $end, $isLong, $room, $dates, $day)
+    {
+        $query = "INSERT INTO appointmens
+                    (
+                       notes_event , employee , start_event , end_event ,long_event,room_event , create_date ,mark
+                    ) 
+                    VALUES 
+                    (
+                       '{$description}', '{$employee}', '{$start}', '{$end}', '{ $isLong}', '{$room}', '{$dates}', '{$day}'
+                    )";
+        $result = $this->db->query($query);
+        return $result;
     }
 }

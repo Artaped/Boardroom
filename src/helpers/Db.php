@@ -8,20 +8,28 @@ use PDO;
 
 class Db
 {
-    /**
-     * Устанавливает соединение с базой данных
-     * @return \PDO <p>Объект класса PDO для работы с БД</p>
-     */
-    public static function getConnection()
+    private static $instance = NULL;
+
+    private function __construct()
     {
-        // Получаем параметры подключения из файла
+
+    }
+    private function __clone()
+    {
+
+    }
+    public static function getInstance()
+    {
         $paramsPath =  'db_params.php';
         $params = include($paramsPath);
-        // Устанавливаем соединение
+
         $dsn = "mysql:host={$params['host']};dbname={$params['dbname']}";
-        $db = new PDO($dsn, $params['user'], $params['password']);
-        // Задаем кодировку
-        $db->exec("set names utf8");
-        return $db;
+
+        if (!self::$instance)
+        {
+            self::$instance = new PDO($dsn, $params['user'], $params['password']);
+            self::$instance-> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        }
+        return self::$instance;
     }
 }

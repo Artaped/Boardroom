@@ -4,90 +4,126 @@
 namespace App\controllers;
 
 
-use App\helpers\Db;
+use App\helpers\Messenger;
 use App\models\Employee;
 use App\models\Event;
-use DateTime;
 
-class EventController
+class EventController extends Controller
 {
-    public function index()
+    private $event;
+    private $employee;
+
+    public function __construct()
     {
+        $this->event = new Event();
+        $this->employee = new Employee();
+    }
+
+    public function create()
+    {
+        $employees = $this->employee->getEmployeeList();
+
         if (isset($_POST['submit'])) {
             $errors = false;
-            $room = (int)$_POST['room'];
-            //who made
-            $employee = $_POST['employee'];
-            //Продолжительность неделя или больше
-            $isLong = (int)$_POST['long'] === 0 ? 0 : 1;
-            //Описание события
-            $description = $_POST['description'];  // ------ must be not empty
-            if (empty($description)) {
-                $errors[] = "Notes is empty";
-            }
-            //Дата события формат day/month/year
-            $eventDate = "20{$_POST['year']}-{$_POST['month']}-{$_POST['day']}";
-            //Время начала события hour/minute/format{PM/AM}
-            $startHour = $_POST['start_hour'];
-            $markStart = $_POST['start_pm'];
-            $startHour = $markStart === "PM" ? $startHour +12 : $startHour;
-            $eventStart = "{$startHour}:{$_POST['start_minute']}:00";
-            //Время окончания события hour/minute/format{PM/AM}
-            $endHour = $_POST['end_hour'];
-            $markEnd = $_POST['end_pm'];
-            $endHour = $markEnd === "PM" ? $endHour +12 : $endHour;
-            $eventEnd = "{$endHour}:{$_POST['end_minute']}:00";
+            $sanitized = $this->sanitizeArray($_POST);
+            $room = (int)$sanitized['room'];
+            $employee = $sanitized['employee'];
+            $isLong = (int)$sanitized['long'];
+            $description = $sanitized['description'];
+            $eventDate = "20{$sanitized['year']}-{$sanitized['month']}-{$sanitized['day']}";
+            //start
+            $startHour = $sanitized['start_hour'];
+            $markStart = $sanitized['start_pm'];
+            $startHour = $markStart === "PM" ? $startHour + 12 : $startHour;
+            $eventStart = "{$startHour}:{$sanitized['start_minute']}:00";
+            //end
+            $endHour = $sanitized['end_hour'];
+            $markEnd = $sanitized['end_pm'];
+            $endHour = $markEnd === "PM" ? $endHour + 12 : $endHour;
+            $eventEnd = "{$endHour}:{$sanitized['end_minute']}:00";
 
             $start = "{$eventDate} {$eventStart}";
             $end = "{$eventDate} {$eventEnd}";
-            $day = $_POST['day'];
-
+            $eventDay = $sanitized['day'];
+            $howLong = $sanitized['week'];//неделя раз в две недели ежемесячно
+            $howWeek = $sanitized['duration'];
             $startDateTime = strtotime("{$eventDate} {$eventStart}");
             $endDateTime = strtotime("{$eventDate} {$eventEnd}");
             $currentTime = strtotime(date("Y-m-d H:i:s"));
+            $dateCreateEvent = date('Y-m-d H:i:s');
 
-//date made
-            $dates = date('Y-m-d H:i:s');
+
+            if (empty($description)) {
+                $errors[] = "Notes is empty";
+            }
+
+            if ($startDateTime < $currentTime) {
+                $errors[] = "событие будет в прошлом";
+            }
+            if ($startDateTime === $endDateTime) {
+                $errors[] = "Начало и окончание события совпадают";
+            }
+
+            $checkDateStart = $this->event->checkDate("{$eventDate} {$eventStart}", "start_event",$room);
+            $checkDateEnd = $this->event->checkDate("{$eventDate} {$eventEnd}", "end_event", $room);
+            if ($checkDateStart) {
+                $errors[] = "время занято, прпробуйте другое";
+            }
+            if ($checkDateEnd) {
+                $errors[] = "время занято, прпробуйте другое";
+            }
+
+            //проверяем продолжительность
+            if ($isLong > 0 && $howLong === 'w') {
+echo "указать сколько недель ".$howWeek;
+                //если выбрано $isLong смотрим сколько в $howweek и сохраняем в стольких неделях
+                //выбираем недели и плюсуем
+            } elseif ($isLong > 0 && $howLong === "bw") {
+                echo "раз в неделю".$howWeek;
+                //если выбрано раз в две недели смотрим сколько в $howweek,
+                // если нечётно то округляем и сохраняем в стольки неделях
+            } elseif ($isLong > 0 && $howLong === 'm') {
+                echo "указать сколько месяцев ".$howWeek;
+                //если выбрано $isLong смотрим сколько в $howweek и сохраняем в стольких месяцах
+            }
+
+            $array = [$description, $employee, $start, $end, $isLong, $room, $dateCreateEvent, $eventDay, $isLong, $howLong, $howWeek];
+
+            //var_dump($array);
             if ($errors == false) {
-                $query = "INSERT INTO appointmens(notes_event , employee , start_event , end_event ,long_event,room_event , create_date ,mark) 
-            VALUES ('{$description}', '{$employee}', '{$start}', '{$end}', '{ $isLong}', '{$room}', '{$dates}', '{$day}')";
-                $db = Db::getConnection();
-                $result = $db->query($query);
+                $result = $this->event->addEvent($description, $employee, $start, $end, $isLong, $room, $dateCreateEvent, $eventDay);
                 if ($result) {
-                    echo "event save in db";
+                    $_SESSION['result'] = "Событие сохранено";
                 }
             }
+            $_SESSION['errors'] = $errors;
         }
 
-        $employees = Employee::getEmployeeList();
-        require_once DIR . "rooms/create.php";
+        echo $this->render(DIR . "rooms/create.php",['employees'=>$employees, 'messenger'=>new Messenger()]);
     }
 
     public static function checkEvent()
     {
         //
     }
-    public static function changeEvent()
-    {
-        $employees = Employee::getEmployeeList();
-        $event = Event::getEventById($_GET['id']);
-        if($_POST['delete']) {
 
-            Event::deleteEventById($_GET['id']);
-            $result = "The Event ".substr($event['start_event'],11)." - ". substr($event['end_event'],11).
-            "has been removed";
+    public function changeEvent()
+    {
+        //$result = false;
+        $employees = $this->employee->getEmployeeList();
+        $event = $this->event->getEventById($_GET['id']);
+
+        if (isset($_POST['delete'])) {
+            $this->event->deleteEventById($_GET['id']);
+            $_SESSION['result'] = "The Event <b>" . substr($event['start_event'], 11, 5) . "</b> - <b>" . substr($event['end_event'], 11, 5) .
+                "</b> has been removed";
         }
-if ($result) {
-    echo $result;
-}
-        require_once DIR."rooms/change.php";
-    }
+        if (isset($_POST['update'])) {
 
-    public function delete($id)
-    {
-        $startDate = $ym = date('Y-m');
-        Event::deleteEventById($id);
-        header("Location: /rooms?ym=$startDate");
+var_dump($_POST);
+        }
+
+        echo $this->render(DIR . "rooms/change.php",['event'=>$event,"employees"=>$employees,'messenger'=>new Messenger()]);
     }
 
 }

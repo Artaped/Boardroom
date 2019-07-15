@@ -1,3 +1,4 @@
+<p><a href="/rooms">Main page</a></p>
 <form action="#" method="post">
     <select name="room">
         <option value="1">Room 1</option>
@@ -8,11 +9,11 @@
         1: Booked for: <br>
         <select name="employee">
             <option value="all">All</option>
-            <?php if($employees):?>
-            <?php foreach ($employees as $employee):?>
-            <option value="<?php echo $employee['name']?>"><?php echo $employee['name']?></option>
-            <?php endforeach;?>
-            <?php endif;?>
+            <?php if ($employees): ?>
+                <?php foreach ($employees as $employee): ?>
+                    <option value="<?php echo $employee['name'] ?>"><?php echo $employee['name'] ?></option>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </select>
     </div>
     <div>
@@ -94,7 +95,7 @@
         3. Specify what the time and end of the meeting(This will be what people see on the calendar.) <br><br>
         Start Time:
         <div class="start">
-            <select name="start_hour" >
+            <select name="start_hour">
                 <option value="0">0</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -109,7 +110,7 @@
                 <option value="11">11</option>
                 <option value="12">12</option>
             </select>
-            <select name="start_minute" >
+            <select name="start_minute">
                 <option value="00">00</option>
                 <option value="01">01</option>
                 <option value="02">02</option>
@@ -182,7 +183,7 @@
     End Time:
     <div>
         <div class="end">
-            <select name="end_hour" >
+            <select name="end_hour">
                 <option value="0">0</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -197,7 +198,7 @@
                 <option value="11">11</option>
                 <option value="12">12</option>
             </select>
-            <select name="end_minute" >
+            <select name="end_minute">
                 <option value="00">00</option>
                 <option value="01">01</option>
                 <option value="02">02</option>
@@ -285,21 +286,17 @@
     </div>
     <br>
     <div>
-        If weekly or bi-weekly, specify the number of weeks for to keep recurring. If monthly, specify the number of months.
+        If weekly or bi-weekly, specify the number of weeks for to keep recurring. If monthly, specify the number of
+        months.
         <br>
         (If you choose "bi-weekly" and put in an odd number of weeks, the computer will round down. )<br><br>
-        <input type="text" name="numweek">duration (max 4 weeks)
+        <input type="text" name="duration">duration (max 4 weeks)
     </div>
     <button type="submit" name="submit">submit</button>
 </form>
 <div>
     <h3>
-        <?php if (isset($errors) && is_array($errors)): ?>
-            <ul>
-                <?php foreach ($errors as $error): ?>
-                    <li> <?php echo $error; ?></li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
+        <?php $messenger->printError();?>
+        <?php $messenger->printResult();?>
     </h3>
 </div>

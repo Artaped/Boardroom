@@ -13,8 +13,8 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/',["App\controllers\AuthController", "login"]);
     $r->addRoute('GET', '/logout',["App\controllers\AuthController", "logout"]);
     //Events
-    $r->addRoute('POST', '/book/create',["App\controllers\EventController", "index"]);
-    $r->addRoute('GET', '/book/create',["App\controllers\EventController", "index"]);
+    $r->addRoute('POST', '/book/create',["App\controllers\EventController", "create"]);
+    $r->addRoute('GET', '/book/create',["App\controllers\EventController", "create"]);
     $r->addRoute('POST', '/book/change',["App\controllers\EventController", "changeEvent"]);
     $r->addRoute('GET', '/book/change',["App\controllers\EventController", "changeEvent"]);
     $r->addRoute('GET', '/book/delete/{id:\d+}',["App\controllers\EventController", "delete"]);

@@ -34,5 +34,9 @@
 </table>
 <br>
 <a href="/employee/create">Add a new Employee</a>
+<h3>
+    <?php $messenger->printError();?>
+    <?php $messenger->printResult();?>
+</h3>
 </body>
 </html>

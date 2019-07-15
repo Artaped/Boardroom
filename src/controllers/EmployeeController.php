@@ -4,26 +4,24 @@
 namespace App\controllers;
 
 
-use App\helpers\Validator;
+
+use App\helpers\Messenger;
 use App\models\Employee;
 
-class EmployeeController
+class EmployeeController extends Controller
 {
+    private $employee;
+    public function __construct()
+    {
+        $this->employee = new Employee();
+    }
+
     public function create()
     {
-        // Переменные для формы
-        $name = false;
-        $email = false;
-        $result = false;
-        // Обработка формы
         if (isset($_POST['submit'])) {
-            // Если форма отправлена
-            // Получаем данные из формы
             $name = $_POST['name'];
             $email = $_POST['email'];
-            // Флаг ошибок
-            $errors = false;
-            // Валидация полей
+
             if (!Employee::checkName($name)) {
                 $errors[] = 'Имя не должно быть короче 2-х символов';
             }
@@ -31,37 +29,44 @@ class EmployeeController
                 $errors[] = 'Неправильный email';
             }
 
-            if (Employee::checkEmailExists($email)) {
+            if ($this->employee->checkEmailExists($email)) {
                 $errors[] = 'Такой email уже используется';
             }
 
-            if ($errors == false) {
+            if (!$errors) {
 
-                $result = Employee::register($name, $email);
+                $this->employee->register($name, $email);
+                $_SESSION['result'] = "Поьзователь сохранен";
                 header("Location: /employee");
             }
+
+            $_SESSION['errors'] = $errors;
         }
-        require_once DIR . 'employee/create.php';
+
+        echo $this->render(DIR .  'employee/create.php',['messenger'=>new Messenger()]);
         return true;
     }
 
     public function update($id)
     {
-        $employee = Employee::getEmployeeById($id);
-        // Обработка формы
+
+        $employee = $this->employee->getEmployeeById($id);
+
         if (isset($_POST['submit'])) {
             $name = $_POST['name'];
             $email = $_POST['email'];
-            Employee::updateEmployee($id, $name, $email);
+            $this->employee->updateEmployee($id, $name, $email);
+            $_SESSION['result'] = "пользователь изменен";
             header("Location: /employee");
         }
-        require_once DIR . 'employee/update.php';
+        echo $this->render(DIR . 'employee/update.php',['employee'=>$employee,'messenger'=>new Messenger()]);
     }
 
 
     public function delete($id)
     {
-        Employee::deleteEmployeeById($id);
+        $this->employee->deleteEmployeeById($id);
+        $_SESSION['result'] = "пользователь удален";
         header('Location: /employee');
     }
 }

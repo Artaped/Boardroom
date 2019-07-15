@@ -1,10 +1,6 @@
 <?php
 
-
 namespace App\helpers;
-
-
-use DateTime;
 
 class Calendar
 {
@@ -17,7 +13,7 @@ class Calendar
         $dayEvents = '';
         // Add empty cell(s)
         $week .= str_repeat('<td></td>', $str - 1);
-        for ($day = 1, $j = 1; $day <= $day_count; $day++, $str++) {
+        for ($day = 1; $day <= $day_count; $day++, $str++) {
             $date = $ym . '-' . $day;
             if ($today == $date) {
                 $week .= '<td class="today">';
@@ -37,9 +33,7 @@ class Calendar
                 }
             }
             if (!empty($time[$day])) {
-                foreach ($time[$day] as $it) {
                     $dayEvents = implode(',', $time[$day]);
-                }
             }
             $week .= $day . str_replace(',', '', $dayEvents) . "</td>";
             // Sunday OR last day of the month

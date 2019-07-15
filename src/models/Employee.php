@@ -3,111 +3,88 @@
 
 namespace App\models;
 
-use App\helpers\Db;
 use PDO;
 
-class Employee
+class Employee extends Model
 {
-
     /**
-     * Регистрация пользователя
-     * @param string $name <p>Имя</p>
-     * @param string $email <p>E-mail</p>
-     * @return boolean <p>Результат выполнения метода</p>
+     * @param $name
+     * @param $email
+     * @return bool
      */
-    public static function register($name, $email)
+    public function register(String $name, String $email): bool
     {
-        // Соединение с БД
-        $db = Db::getConnection();
-        // Текст запроса к БД
         $sql = 'INSERT INTO employee (name, email) '
             . 'VALUES (:name, :email)';
-        // Получение и возврат результатов. Используется подготовленный запрос
-        $result = $db->prepare($sql);
+        $result = $this->db->prepare($sql);
         $result->bindParam(':name', $name, PDO::PARAM_STR);
         $result->bindParam(':email', $email, PDO::PARAM_STR);
         return $result->execute();
     }
 
-    public static function getEmployeeList()
+    /**
+     * @return array
+     */
+    public function getEmployeeList(): array
     {
-        // Соединение с БД
-        $db = Db::getConnection();
-
-        // Запрос к БД
-        $result = $db->query('SELECT id, name, email FROM employee ORDER BY id ASC');
-
-        // Получение и возврат результатов
-        $employeeList = array();
-        $i = 0;
-        while ($row = $result->fetch()) {
-            $employeeList[$i]['id'] = $row['id'];
-            $employeeList[$i]['name'] = $row['name'];
-            $employeeList[$i]['email'] = $row['email'];
-            $i++;
-        }
+        $result = $this->db->query('SELECT id, name, email FROM employee ORDER BY id ASC');
+        $employeeList = $result->fetchAll(PDO::FETCH_ASSOC);
         return $employeeList;
     }
 
     /**
-     * Возвращает пользователя с указанным id
-     * @param integer $id <p>id пользователя</p>
-     * @return array <p>Массив с информацией о пользователе</p>
+     * @param $id
+     * @return array
      */
-    public static function getEmployeeById($id)
+    public function getEmployeeById(int $id): array
     {
-        // Соединение с БД
-        $db = Db::getConnection();
-        // Текст запроса к БД
-        $sql = 'SELECT * FROM employee WHERE id = :id';
-        // Получение и возврат результатов. Используется подготовленный запрос
-        $result = $db->prepare($sql);
+
+        $sql = 'SELECT id, name, email  FROM employee WHERE id = :id';
+        $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);
-        // Указываем, что хотим получить данные в виде массива
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
         return $result->fetch();
     }
 
+
     /**
-     * Редактирование данных пользователя
-     * @param integer $id <p>id пользователя</p>
-     * @param string $name <p>Имя</p>
-     * @param string $email <p>Пароль</p>
-     * @return boolean <p>Результат выполнения метода</p>
+     * @param $id
+     * @param $name
+     * @param $email
+     * @return bool
      */
-    public static function updateEmployee($id, $name, $email)
+    public function updateEmployee(int $id, string $name, string $email): bool
     {
-        // Соединение с БД
-        $db = Db::getConnection();
-        // Текст запроса к БД
+
         $sql = "UPDATE employee SET name = :name, email = :email  WHERE id = :id";
-        // Получение и возврат результатов. Используется подготовленный запрос
-        $result = $db->prepare($sql);
+
+        $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);
         $result->bindParam(':name', $name, PDO::PARAM_STR);
         $result->bindParam(':email', $email, PDO::PARAM_STR);
         return $result->execute();
     }
 
-    public static function deleteEmployeeById($id)
+    /**
+     * @param $id
+     * @return bool
+     */
+    public function deleteEmployeeById(int $id): bool
     {
-        // Соединение с БД
-        $db = Db::getConnection();
-        // Текст запроса к БД
+
         $sql = 'DELETE FROM employee WHERE id = :id';
         // Получение и возврат результатов. Используется подготовленный запрос
-        $result = $db->prepare($sql);
+        $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);
         return $result->execute();
     }
 
     /**
-     * Проверяет имя: не меньше, чем 2 символа
-     * @param string $name <p>Имя</p>
-     * @return boolean <p>Результат выполнения метода</p>
+     * @param $name
+     * @return bool
      */
-    public static function checkName($name)
+    public static function checkName(String $name): bool
     {
         if (strlen($name) >= 2) {
             return true;
@@ -115,12 +92,12 @@ class Employee
         return false;
     }
 
+
     /**
-     * Проверяет email
-     * @param string $email <p>E-mail</p>
-     * @return boolean <p>Результат выполнения метода</p>
+     * @param $email
+     * @return bool
      */
-    public static function checkEmail($email)
+    public static function checkEmail(String $email): bool
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return true;
@@ -128,19 +105,15 @@ class Employee
         return false;
     }
 
+
     /**
-     * Проверяет не занят ли email другим пользователем
-     * @param type $email <p>E-mail</p>
-     * @return boolean <p>Результат выполнения метода</p>
+     * @param $email
+     * @return bool if exist - true
      */
-    public static function checkEmailExists($email)
+    public function checkEmailExists(String $email): bool
     {
-        // Соединение с БД
-        $db = Db::getConnection();
-        // Текст запроса к БД
         $sql = 'SELECT COUNT(*) FROM employee WHERE email = :email';
-        // Получение результатов. Используется подготовленный запрос
-        $result = $db->prepare($sql);
+        $result = $this->db->prepare($sql);
         $result->bindParam(':email', $email, PDO::PARAM_STR);
         $result->execute();
         if ($result->fetchColumn()) {
@@ -149,6 +122,4 @@ class Employee
             return false;
         }
     }
-
-
 }
