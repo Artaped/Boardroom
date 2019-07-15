@@ -4,6 +4,14 @@ namespace App\helpers;
 
 class Calendar
 {
+    /**
+     * @param $str
+     * @param $day_count
+     * @param $ym  string year months
+     * @param $today
+     * @param $events
+     * @return array calendar view with day events
+     */
     public static function makeCalendar($str, $day_count, $ym, $today, $events)
     {
         // Array for calendar
@@ -20,23 +28,25 @@ class Calendar
             } else {
                 $week .= '<td>';
             }
+            //add events in dey use field - mark.and make pop-up page in teg <a>
             foreach ($events as $event) {
                 if ($event['mark'] == $day) {
                     $time[$day][] = "<br>
                        <a href=\"/book/change?id={$event['id']}\" 
                            onclick=\"basicPopup(this.href);return false\">"
-                           . substr($event['start_event'], 11) .
-                           " - " . substr($event['end_event'], 11) .
-                       "</a>";
+                        . substr($event['start_event'], 11) .
+                        " - " . substr($event['end_event'], 11) .
+                        "</a>";
                 } else {
                     $time[$day][] = "";
                 }
             }
             if (!empty($time[$day])) {
-                    $dayEvents = implode(',', $time[$day]);
+                $dayEvents = implode(',', $time[$day]);
             }
             $week .= $day . str_replace(',', '', $dayEvents) . "</td>";
-            // Sunday OR last day of the month
+            //and make events
+
             if ($str % 7 == 0 || $day == $day_count) {
                 // last day of the month
                 if ($day == $day_count && $str % 7 != 0) {
@@ -50,29 +60,4 @@ class Calendar
         return $weeks;
     }
 
-    public static function getCalendarDate()
-    {
-        // Get prev & next month
-        if (isset($_GET['ym'])) {
-            $ym = $_GET['ym'];
-        } else {
-            $ym = date('Y-m');
-        }
-
-        $timestamp = strtotime($ym . '-01');  // the first day of the month
-        if ($timestamp === false) {
-            $ym = date('Y-m');
-            $timestamp = strtotime($ym . '-01');
-        }
-
-        $today = date('Y-m-j');
-        $title = date('F, Y', $timestamp);
-        $month = date('Y-m', $timestamp);
-        $prev = date('Y-m', strtotime('-1 month', $timestamp));
-        $next = date('Y-m', strtotime('+1 month', $timestamp));
-        $day_count = date('t', $timestamp);
-        $str = date('N', $timestamp);
-
-        return array($timestamp, $ym, $today, $title, $month, $prev, $next, $day_count, $str);
-    }
 }

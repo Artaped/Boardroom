@@ -8,18 +8,12 @@
                     <form action="#" method="post">
                         <input type="text" name="login" placeholder="login">
                         <input type="password" name="password" placeholder="Пароль">
-                        <input type="submit" name="submit" class="btn btn-default" value="Вход" />
+                        <input type="submit" name="submit" class="btn btn-default" value="Вход"/>
                     </form>
                 </div><!--/sign up form-->
-
-
-                <?php if (isset($errors) && is_array($errors)): ?>
-                    <ul>
-                        <?php foreach ($errors as $error): ?>
-                            <li> - <?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
+                <h3>
+                    <?php $messenger->printError(); ?>
+                </h3>
                 <br/>
                 <br/>
             </div>

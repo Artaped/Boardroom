@@ -3,8 +3,13 @@
 
 namespace App\controllers;
 
+use App\helpers\Messenger;
+
 class AuthController extends Controller
 {
+    /**
+     *Login and make session
+     */
     public function login()
     {
 
@@ -33,11 +38,15 @@ class AuthController extends Controller
                 $startDate = $ym = date('Y-m');
                 header("Location: /rooms?ym=$startDate");
             }
+            $_SESSION['errors'] = $errors;
         }
 
-        echo $this->render(DIR .  "main.php",['errors'=>$errors]);
+        echo $this->render(DIR .  "main.php",['messenger' => new Messenger()]);
     }
 
+    /**
+     *Logout and end session
+     */
     public function logout()
     {
         unset($_SESSION['name']);

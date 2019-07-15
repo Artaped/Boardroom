@@ -20,44 +20,47 @@ class HomeController extends Controller
         $this->employee = new Employee();
     }
 
+    /**
+     * render employeeList page
+     * @return bool
+     */
     public function employeeList()
     {
 
         $employees = $this->employee->getEmployeeList();
-        echo $this->render(DIR ."/employee/employeeList.php",['employees'=>$employees,'messenger'=>new Messenger()]);
+
+        echo $this->render(DIR ."/employee/employeeList.php",
+            [
+                'employees'=>$employees,
+                'messenger'=>new Messenger()
+            ]);
         return true;
     }
 
+    /**
+     * render event page
+     * @return bool
+     */
     public function rooms()
     {
-        if (isset($_GET['ym'])) {
-            $ym = $_GET['ym'];
-        } else {
-            $ym = date('Y-m');
-        }
-        if (isset($_GET['room'])) {
-            $room = $_GET['room'];
-        } else {
-            $room = '1';
-        }
+        isset($_GET['ym'])? $ym = $_GET['ym']: $ym = date('Y-m');
+        isset($_GET['room'])? $room = $_GET['room']: $room = '1';
+
 
         $timestamp = strtotime($ym . '-01');  // the first day of the month
-        if ($timestamp === false) {
-            $ym = date('Y-m');
-            $timestamp = strtotime($ym . '-01');
-        }
+        $timestamp === false? $ym = date('Y-m'): $timestamp = strtotime($ym . '-01');
+
         $today = date('Y-m-j');
 
         $title = date('F, Y', $timestamp);
         $month = date('Y-m', $timestamp);
+        $day_count = date('t', $timestamp);
+        $str = date('N', $timestamp);
         $events = $this->event->getAllEventByDate($month, $room);
 
         $prev = date('Y-m', strtotime('-1 month', $timestamp));
         $next = date('Y-m', strtotime('+1 month', $timestamp));
 
-        $day_count = date('t', $timestamp);
-
-        $str = date('N', $timestamp);
         $weeks = Calendar::makeCalendar($str, $day_count, $ym, $today, $events);
         $array = ['weeks'=>$weeks,'title'=>$title,'prev'=>$prev,'next'=>$next];
         echo $this->render(DIR . "rooms/index.php",$array);
