@@ -1,4 +1,4 @@
 .gitignore
 composer.loc
-.idea
+.idea/
 vendor
