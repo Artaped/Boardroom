@@ -1,3 +1,4 @@
+.gitignore
 composer.loc
-.ide
+.idea
 vendor
