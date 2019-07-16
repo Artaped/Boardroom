@@ -1,35 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3ce48188-cfc9-4ff1-ac25-4f6a6478d17b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/books.loc.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controllers/AuthController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/AuthController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controllers/EmployeeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/EmployeeController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controllers/EventController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/EventController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controllers/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/HomeController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/helpers/Db.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/helpers/Db.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/helpers/Messenger.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/helpers/Messenger.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/helpers/db_params.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/helpers/db_params.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/Employee.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/Employee.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/Event.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/Event.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/Model.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/Model.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/employee/create.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/employee/create.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/employee/employeeList.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/employee/employeeList.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/employee/update.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/employee/update.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/rooms/change.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/rooms/change.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/rooms/create.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/rooms/create.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/rooms/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/rooms/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/template/header.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/template/header.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/start.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/start.php" afterDir="false" />
-    </list>
+    <list default="true" id="3ce48188-cfc9-4ff1-ac25-4f6a6478d17b" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -171,29 +143,6 @@
               <item name="books.loc" type="b2602c69:ProjectViewProjectNode" />
               <item name="books.loc" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="books.loc" type="b2602c69:ProjectViewProjectNode" />
-              <item name="books.loc" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="books.loc" type="b2602c69:ProjectViewProjectNode" />
-              <item name="books.loc" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="controllers" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="books.loc" type="b2602c69:ProjectViewProjectNode" />
-              <item name="books.loc" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="helpers" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="books.loc" type="b2602c69:ProjectViewProjectNode" />
-              <item name="books.loc" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -234,18 +183,17 @@
       <updated>1563157786137</updated>
       <workItem from="1563157787394" duration="13935000" />
       <workItem from="1563207489414" duration="20115000" />
-      <workItem from="1563243231219" duration="5113000" />
+      <workItem from="1563243231219" duration="6071000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="39163000" />
+    <option name="totallyTimeSpent" value="40121000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23154363" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23154363" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="DB Browser" order="2" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -261,7 +209,7 @@
       <window_info anchor="bottom" id="Inspection Results" order="9" weight="0.3292683" />
       <window_info anchor="bottom" id="DB Execution Console" order="10" />
       <window_info anchor="bottom" id="Database Changes" order="11" />
-      <window_info anchor="bottom" id="Terminal" order="12" weight="0.15864022" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="12" visible="true" weight="0.15722379" />
       <window_info anchor="bottom" id="Event Log" order="13" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
