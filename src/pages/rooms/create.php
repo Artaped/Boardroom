@@ -1,3 +1,4 @@
+
 <p><a href="/rooms">Main page</a></p>
 <form action="#" method="post">
     <select name="room">

@@ -9,19 +9,31 @@ use App\helpers\Messenger;
 use App\models\Employee;
 use App\models\Event;
 
+/**
+ * Class HomeController
+ *
+ * @package App\controllers
+ */
 class HomeController extends Controller
 {
     private $event;
     private $employee;
 
+    /**
+     * HomeController constructor.
+     */
     public function __construct()
     {
         $this->event = new Event();
         $this->employee = new Employee();
+        if(!AuthController::checkAuth()){
+            header("Location: /");
+        }
     }
 
     /**
-     * render employeeList page
+     * Render employeeList page
+     *
      * @return bool
      */
     public function employeeList()
@@ -38,7 +50,8 @@ class HomeController extends Controller
     }
 
     /**
-     * render event page
+     * Render event page
+     *
      * @return bool
      */
     public function rooms()
@@ -63,7 +76,7 @@ class HomeController extends Controller
 
         $weeks = Calendar::makeCalendar($str, $day_count, $ym, $today, $events);
         $array = ['weeks'=>$weeks,'title'=>$title,'prev'=>$prev,'next'=>$next];
-        echo $this->render(DIR . "rooms/index.php",$array);
+        echo $this->render(DIR . "rooms/index.php", $array);
         return true;
     }
 }

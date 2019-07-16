@@ -23,10 +23,7 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/employee',["App\controllers\HomeController", "employeeList"]);
     $r->addRoute('GET', '/rooms',["App\controllers\HomeController", "rooms"]);
     //----------------------------------------------------------
-    // {id} must be a number (\d+)
-    $r->addRoute('GET', '/user/{id:\d+}', 'get_user_handler');
-    // The /{title} suffix is optional
-    $r->addRoute('GET', '/articles/{id:\d+}[/{title}]', 'get_article_handler');
+
 });
 
 // Fetch method and URI from somewhere
@@ -52,6 +49,6 @@ switch ($routeInfo[0]) {
         $handler = $routeInfo[1];
         $vars = $routeInfo[2];
         list($class, $method) = $handler;
-        call_user_func_array(array(new $class, $method), $vars);
+        call_user_func_array([new $class, $method], $vars);
         break;
 }

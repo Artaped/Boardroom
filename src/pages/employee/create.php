@@ -1,3 +1,4 @@
+<?php include DIR . "template/header.php" ?>
 <div>
     <a href="/rooms">Room</a>
 </div>
@@ -22,7 +23,6 @@
         <h3>
             <h3>
                 <?php $messenger->printError();?>
-                <?php $messenger->printResult();?>
             </h3>
         </h3>
     </h3>

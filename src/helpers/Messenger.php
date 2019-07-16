@@ -3,9 +3,18 @@
 
 namespace App\helpers;
 
-
+/**
+ * Class Messenger
+ *
+ * @package App\helpers
+ */
 class Messenger
 {
+    /**
+     * Print session field result
+     *
+     * @return void
+     */
     public function printResult()
     {
         if (isset($_SESSION['result'])) {
@@ -14,6 +23,11 @@ class Messenger
         }
     }
 
+    /**
+     * Print sesion field errors
+     *
+     * @return void
+     */
     public function printError()
     {
         if (isset($_SESSION['errors']) && $_SESSION['errors'] != false) {
@@ -25,6 +39,4 @@ class Messenger
             unset($_SESSION['errors']);
         }
     }
-
-
 }

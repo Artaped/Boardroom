@@ -27,9 +27,9 @@ class Employee extends Model
      */
     public function getEmployeeList(): array
     {
-        $result = $this->db->query('SELECT id, name, email FROM employee ORDER BY id ASC');
-        $employeeList = $result->fetchAll(PDO::FETCH_ASSOC);
-        return $employeeList;
+        $result = $this->db->query(
+            'SELECT id, name, email FROM employee ORDER BY id ASC');
+        return $result->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**

@@ -1,8 +1,8 @@
 <?php
 // Массив с параметрами подключения к базе данных
-return array(
+return [
     'host' => 'localhost',
     'dbname' => 'books',
     'user' => 'root',
     'password' => '',
-);
+];

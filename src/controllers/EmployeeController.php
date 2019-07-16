@@ -7,13 +7,24 @@ namespace App\controllers;
 use App\helpers\Messenger;
 use App\models\Employee;
 
+/**
+ * Class EmployeeController
+ *
+ * @package App\controllers
+ */
 class EmployeeController extends Controller
 {
     private $employee;
 
+    /**
+     * EmployeeController constructor.
+     */
     public function __construct()
     {
         $this->employee = new Employee();
+        if (!AuthController::checkAuth()) {
+            header("Location: /");
+        }
     }
 
     /**
@@ -23,6 +34,7 @@ class EmployeeController extends Controller
     public function create()
     {
         if (isset($_POST['submit'])) {
+            $errors = false;
             $name = $_POST['name'];
             $email = $_POST['email'];
 
@@ -37,7 +49,7 @@ class EmployeeController extends Controller
                 $errors[] = 'Такой email уже используется';
             }
 
-            if (empty($errors)) {
+            if ($errors == false) {
 
                 $this->employee->register($name, $email);
                 $_SESSION['result'] = "Поьзователь сохранен";
@@ -47,12 +59,15 @@ class EmployeeController extends Controller
             $_SESSION['errors'] = $errors;
         }
 
-        echo $this->render(DIR . 'employee/create.php', ['messenger' => new Messenger()]);
+        echo $this->render(DIR . 'employee/create.php', [
+            'messenger' => new Messenger()
+        ]);
         return true;
     }
 
     /**
-     * change Employee name or email
+     * Change Employee name or email
+     *
      * @param $id
      */
     public function update($id)
@@ -77,12 +92,16 @@ class EmployeeController extends Controller
             }
             $_SESSION['errors'] = $errors;
         }
-        echo $this->render(DIR . 'employee/update.php', ['employee' => $employee, 'messenger' => new Messenger()]);
+        echo $this->render(DIR . 'employee/update.php', [
+            'employee' => $employee,
+            'messenger' => new Messenger()
+        ]);
     }
 
 
     /**
      * Delete Employee
+     *
      * @param $id
      */
     public function delete($id)

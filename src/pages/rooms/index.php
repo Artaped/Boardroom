@@ -1,11 +1,12 @@
 <?php include DIR . "template/header.php" ?>
 <div class="ontainer">
-    <h3 align="center"><b>This is Rooms page</b></h3>
+    <h1>
     <div align="center">
-        <a href="/rooms?ym=<?= $_GET['ym'] ?>&room=1">room1</a>
-        <a href="/rooms?ym=<?= $_GET['ym'] ?>&room=2">room2</a>
-        <a href="/rooms?ym=<?= $_GET['ym'] ?>&room=3">room3</a>
+        <a href="/rooms?ym=<?= $_GET['ym'] ?>&room=1">Room 1</a>|
+        <a href="/rooms?ym=<?= $_GET['ym'] ?>&room=2">Room 2</a>|
+        <a href="/rooms?ym=<?= $_GET['ym'] ?>&room=3">Room 3</a>
     </div>
+    </h1>
     <a href='/logout' id="logout">Logout</a>
 </div>
 <hr>
@@ -16,7 +17,7 @@
         <li class="list-inline-item"><a href="?ym=<?= $next; ?>" class="btn btn-link">next &gt;</a></li>
     </ul>
     <p class="text-right"><a href="/rooms">Today</a></p>
-    <table class="table table-bordered" align="left">
+    <table class="table table-bordered" align="left" style="background: aliceblue">
         <thead>
         <tr>
             <th>Monday</th>

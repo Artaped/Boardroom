@@ -8,12 +8,12 @@ use PDO;
 class Event extends Model
 {
     /**
-     * @param $date event time
+     * @param event #date time
      * @param $field "start_event or end_event"
      * @param $room 1/2/3
      * @return bool free time in this room or not
      */
-    public function checkDate(String $date,String $field,int $room)
+    public function checkDate(String $date, String $field, int $room)
     {
 
         $sql = "SELECT COUNT(*) FROM appointmens WHERE {$field} = :date AND room_event = :room ";
@@ -35,9 +35,8 @@ class Event extends Model
     {
 
         $result = $this->db->query('SELECT * FROM appointmens ORDER BY start_event ASC');
-        $res = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        return $res;
+        return $result->fetchAll(PDO::FETCH_ASSOC);;
     }
 
     /**
@@ -49,9 +48,8 @@ class Event extends Model
     {
         $sql = "SELECT * FROM appointmens WHERE  start_event LIKE '{$date}-%' AND room_event = '{$room}' ORDER BY start_event ASC";
         $result = $this->db->query($sql);
-        $res = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        return $res;
+        return $result->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -75,9 +73,21 @@ class Event extends Model
      */
     public function deleteEventById($id)
     {
-        $sql = 'DELETE FROM appointmens WHERE id = :id';
+        $sql = "DELETE FROM appointmens WHERE id = :id ";
         $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);
+        return $result->execute();
+    }
+
+    /**
+     * @param $markLong
+     * @return bool
+     */
+    public function deleteLongEvent($markLong)
+    {
+        $sql = "DELETE FROM appointmens WHERE mark_long = :markLong ";
+        $result = $this->db->prepare($sql);
+        $result->bindParam(':markLong', $markLong);
         return $result->execute();
     }
 
@@ -88,21 +98,26 @@ class Event extends Model
      * @param $end
      * @param $isLong
      * @param $room
-     * @param $dates
-     * @param $day
+     * @param $dateCreateEvent
+     * @param $eventDay
      * @return false PDOStatement
      */
-    public function addEvent($description, $employee, $start, $end, $isLong, $room, $dates, $day)
+    public function addEvent($description, $employee, $start, $end, $isLong, $room, $dateCreateEvent, $eventDay)
     {
-        $query = "INSERT INTO appointmens
-                    (
-                       notes_event , employee , start_event , end_event ,long_event,room_event , create_date ,mark
-                    ) 
+        $query = "INSERT INTO appointmens (notes_event , employee , start_event , end_event ,long_event,room_event,create_date ,mark) 
                     VALUES 
-                    (
-                       '{$description}', '{$employee}', '{$start}', '{$end}', '{ $isLong}', '{$room}', '{$dates}', '{$day}'
-                    )";
+                    ('{$description}', '{$employee}', '{$start}', '{$end}', '{$isLong}', '{$room}', '{$dateCreateEvent}', '{$eventDay}')
+        ";
         $result = $this->db->query($query);
         return $result;
     }
+
+    public function addLongEvent(String $string)
+    {
+        $query = "INSERT INTO appointmens(notes_event , employee , start_event , end_event ,long_event,room_event,create_date ,mark, mark_long) 
+                    VALUES $string";
+        $result = $this->db->query($query);
+        return $result;
+    }
+
 }

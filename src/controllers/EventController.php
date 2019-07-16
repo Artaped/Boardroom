@@ -7,18 +7,36 @@ namespace App\controllers;
 use App\helpers\Messenger;
 use App\models\Employee;
 use App\models\Event;
+use DateTime;
 
+/**
+ * Class EventController
+ *
+ * @package App\controllers
+ */
 class EventController extends Controller
 {
     private $event;
     private $employee;
 
+    /**
+     * EventController constructor.
+     */
     public function __construct()
     {
         $this->event = new Event();
         $this->employee = new Employee();
+        if (!AuthController::checkAuth()) {
+            header("Location: /");
+        }
+
     }
 
+    /**
+     * @param $_POST
+     *
+     * @return $errors or true
+     */
     public function create()
     {
         $employees = $this->employee->getEmployeeList();
@@ -47,10 +65,14 @@ class EventController extends Controller
             $eventDay = $sanitized['day'];
             $howLong = $sanitized['week'];//неделя раз в две недели ежемесячно
             $howWeek = $sanitized['duration'];
+
             $startDateTime = strtotime("{$eventDate} {$eventStart}");
             $endDateTime = strtotime("{$eventDate} {$eventEnd}");
+
             $currentTime = strtotime(date("Y-m-d H:i:s"));
             $dateCreateEvent = date('Y-m-d H:i:s');
+
+
 
 
             if (empty($description)) {
@@ -58,55 +80,94 @@ class EventController extends Controller
             }
 
             if ($startDateTime < $currentTime) {
-                $errors[] = "событие будет в прошлом";
+                $errors[] = "past date indicated";
             }
             if ($startDateTime === $endDateTime) {
-                $errors[] = "Начало и окончание события совпадают";
+                $errors[] = "The beginning and end of the event are the same.";
             }
 
-            $checkDateStart = $this->event->checkDate("{$eventDate} {$eventStart}", "start_event",$room);
+            $checkDateStart = $this->event->checkDate("{$eventDate} {$eventStart}", "start_event", $room);
             $checkDateEnd = $this->event->checkDate("{$eventDate} {$eventEnd}", "end_event", $room);
-            if ($checkDateStart) {
-                $errors[] = "время занято, прпробуйте другое";
-            }
-            if ($checkDateEnd) {
-                $errors[] = "время занято, прпробуйте другое";
+            if ($checkDateStart || $checkDateEnd) {
+                $errors[] = "time is busy, try another";
             }
 
             //проверяем продолжительность
-            if ($isLong > 0 && $howLong === 'w') {
-echo "указать сколько недель ".$howWeek;
-                //если выбрано $isLong смотрим сколько в $howweek и сохраняем в стольких неделях
-                //выбираем недели и плюсуем
+            if ($isLong > 0 && $howLong === 'w' && $howWeek < 5) {
+                //echo "указать сколько недель " . $howWeek;
+                $a = $eventDate;
+                $finalstart = "(
+                    '{$description}', '{$employee}', '{$start}', '{$end}',
+                    '{$isLong}', '{$room}', '{$dateCreateEvent}','{$eventDay}'
+                    ,'$dateCreateEvent $description'
+                )";
+                for($i = 1; $i < $howWeek; $i++) {
+                    $a = date('Y-m-d',strtotime("+7 day", strtotime($a)));
+                    $d = date('d',strtotime("+7 day", strtotime($a)));
+                    $finalstart .= ','."(
+                        '{$description}', '{$employee}', '$a $eventStart',
+                        '$a $eventEnd', '{$isLong}', '{$room}', '{$dateCreateEvent}
+                        ', '{$d}','$dateCreateEvent $description'
+                    )";
+                }
+
             } elseif ($isLong > 0 && $howLong === "bw") {
-                echo "раз в неделю".$howWeek;
+                echo "раз в неделю" . $howWeek;
                 //если выбрано раз в две недели смотрим сколько в $howweek,
                 // если нечётно то округляем и сохраняем в стольки неделях
-            } elseif ($isLong > 0 && $howLong === 'm') {
-                echo "указать сколько месяцев ".$howWeek;
-                //если выбрано $isLong смотрим сколько в $howweek и сохраняем в стольких месяцах
+            } elseif ($isLong > 0 && $howLong === 'm' && $howWeek < 5) {
+                $a = $eventDate;
+                $finalstart = "(
+                    '{$description}', '{$employee}', '{$start}',
+                    '{$end}', '{$isLong}', '{$room}', '{$dateCreateEvent}',
+                    '{$eventDay}','$dateCreateEvent $description'
+                 )";
+
+                for($i = 1; $i < $howWeek; $i++) {
+                    $a = date('Y-m-d',strtotime("+1 month", strtotime($a)));
+                    $d = date('d',strtotime("+1 month", strtotime($a)));
+                    $finalstart .= ','."(
+                        '{$description}', '{$employee}', '$a $eventStart',
+                        '$a $eventEnd', '{$isLong}', '{$room}', '{$dateCreateEvent}',
+                        '{$d}','$dateCreateEvent $description'
+                    )";
+                }
+
+            }
+            if ($errors == false && $isLong === 1) {
+                $this->event->addLongEvent($finalstart);
+                $_SESSION['result'] = "The long Event has been added<br>
+                            The text for this event is :  <i>{$description}</i>";
             }
 
-            $array = [$description, $employee, $start, $end, $isLong, $room, $dateCreateEvent, $eventDay, $isLong, $howLong, $howWeek];
-
-            //var_dump($array);
-            if ($errors == false) {
-                $result = $this->event->addEvent($description, $employee, $start, $end, $isLong, $room, $dateCreateEvent, $eventDay);
+            if ($errors == false && $isLong != 1) {
+                $result = $this->event->addEvent(
+                    $description, $employee, $start, $end, $isLong,
+                    $room, $dateCreateEvent, $eventDay
+                );
                 if ($result) {
-                    $_SESSION['result'] = "Событие сохранено";
+                    $_SESSION['result'] = "The Event<b>{$startHour}:{$sanitized['start_minute']}
+                            </b> - <b>{$endHour}:{$sanitized['end_minute']}</b> has been added<br>
+                            The text for this event is :  <i>{$description}</i>";
+                    return true;
                 }
             }
             $_SESSION['errors'] = $errors;
         }
 
-        echo $this->render(DIR . "rooms/create.php",['employees'=>$employees, 'messenger'=>new Messenger()]);
+        echo $this->render(DIR . "rooms/create.php", [
+            'employees' => $employees, 'messenger' => new Messenger()
+        ]);
     }
 
-    public static function checkEvent()
+    public static function checkEvent($start, $end, $room)
     {
         //
     }
 
+    /**
+     * Change event
+     */
     public function changeEvent()
     {
         //$result = false;
@@ -114,16 +175,26 @@ echo "указать сколько недель ".$howWeek;
         $event = $this->event->getEventById($_GET['id']);
 
         if (isset($_POST['delete'])) {
-            $this->event->deleteEventById($_GET['id']);
-            $_SESSION['result'] = "The Event <b>" . substr($event['start_event'], 11, 5) . "</b> - <b>" . substr($event['end_event'], 11, 5) .
-                "</b> has been removed";
+            if($_POST['mark_long']) {
+                $markLong = $_POST['mark_long'];
+                $this->event->deleteLongEvent($markLong);
+                $_SESSION['result'] = "The long Event has been added<br>";
+            } else {
+                $this->event->deleteEventById($_GET['id']);
+                $_SESSION['result'] =
+                    "The Event <b>" . substr($event['start_event'], 11, 5) . "</b> - <b>"
+                    . substr($event['end_event'], 11, 5) . "</b> has been removed";
+            }
+
         }
         if (isset($_POST['update'])) {
 
-var_dump($_POST);
+            var_dump($_POST);
         }
 
-        echo $this->render(DIR . "rooms/change.php",['event'=>$event,"employees"=>$employees,'messenger'=>new Messenger()]);
+        echo $this->render(DIR . "rooms/change.php", [
+            'event' => $event, "employees" => $employees, 'messenger' => new Messenger()
+        ]);
     }
 
 }
