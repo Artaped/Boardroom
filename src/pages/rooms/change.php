@@ -8,8 +8,10 @@
     <form action="#" method="post">
         <p>When:
             <input type="text" name="start" value="<?php echo substr($event['start_event'], 11) ?> ">
+            <input type="hidden" name="start_event" value="<?php echo $event['start_event']?>">
             -
             <input type="text" name="end" value="<?php echo substr($event['end_event'], 11) ?>">
+            <input type="hidden" name="end_event" value="<?php echo $event['end_event']?>">
         </p>
         <p>Notes:
             <input type="text" name="description" value="<?php echo $event['notes_event'] ?>">

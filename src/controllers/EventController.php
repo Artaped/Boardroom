@@ -145,12 +145,9 @@ class EventController extends Controller
                     $description, $employee, $start, $end, $isLong,
                     $room, $dateCreateEvent, $eventDay
                 );
-                if ($result) {
-                    $_SESSION['result'] = "The Event<b>{$startHour}:{$sanitized['start_minute']}
+                $_SESSION['result'] = "The Event<b>{$startHour}:{$sanitized['start_minute']}
                             </b> - <b>{$endHour}:{$sanitized['end_minute']}</b> has been added<br>
                             The text for this event is :  <i>{$description}</i>";
-                    return true;
-                }
             }
             $_SESSION['errors'] = $errors;
         }
@@ -178,7 +175,7 @@ class EventController extends Controller
             if($_POST['mark_long']) {
                 $markLong = $_POST['mark_long'];
                 $this->event->deleteLongEvent($markLong);
-                $_SESSION['result'] = "The long Event has been added<br>";
+                $_SESSION['result'] = "The long Event  has been removed<br>";
             } else {
                 $this->event->deleteEventById($_GET['id']);
                 $_SESSION['result'] =
@@ -188,8 +185,17 @@ class EventController extends Controller
 
         }
         if (isset($_POST['update'])) {
-
-            var_dump($_POST);
+            $sanitized = $this->sanitizeArray($_POST);
+            $start= $sanitized['start'];
+            $startEvent = substr($sanitized['start_event'],0,11).$start;
+            $end = $sanitized['end'];
+            $endEvent = substr($sanitized['end_event'],0,11).$end;
+            $description = $sanitized['description'];
+            $id = $sanitized['id'];
+            $name = $sanitized['employee'];
+            $this->event->changeEvent($startEvent,$endEvent,$description,$id,$name);
+            $_SESSION['result'] = "The Event<b>{$start}</b> - <b>{$end}</b> has been update<br>
+                            The text for this event is :  <i>{$description}</i>";
         }
 
         echo $this->render(DIR . "rooms/change.php", [

@@ -120,4 +120,12 @@ class Event extends Model
         return $result;
     }
 
+    public function changeEvent($startEvent, $endEvent, $description, $id, $name)
+    {
+        $sql = "UPDATE appointmens SET start_event = '$startEvent',
+                       end_event = '$endEvent', notes_event = '$description', employee = '$name' WHERE id = '$id'";
+        $result = $this->db->query($sql);
+        return $result;
+    }
+
 }
