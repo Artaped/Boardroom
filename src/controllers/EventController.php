@@ -73,8 +73,6 @@ class EventController extends Controller
             $dateCreateEvent = date('Y-m-d H:i:s');
 
 
-
-
             if (empty($description)) {
                 $errors[] = "Notes is empty";
             }
@@ -101,10 +99,10 @@ class EventController extends Controller
                     '{$isLong}', '{$room}', '{$dateCreateEvent}','{$eventDay}'
                     ,'$dateCreateEvent $description'
                 )";
-                for($i = 1; $i < $howWeek; $i++) {
-                    $a = date('Y-m-d',strtotime("+7 day", strtotime($a)));
-                    $d = date('d',strtotime("+7 day", strtotime($a)));
-                    $finalstart .= ','."(
+                for ($i = 1; $i < $howWeek; $i++) {
+                    $a = date('Y-m-d', strtotime("+7 day", strtotime($a)));
+                    $d = date('d', strtotime($a));
+                    $finalstart .= ',' . "(
                         '{$description}', '{$employee}', '$a $eventStart',
                         '$a $eventEnd', '{$isLong}', '{$room}', '{$dateCreateEvent}
                         ', '{$d}','$dateCreateEvent $description'
@@ -123,10 +121,10 @@ class EventController extends Controller
                     '{$eventDay}','$dateCreateEvent $description'
                  )";
 
-                for($i = 1; $i < $howWeek; $i++) {
-                    $a = date('Y-m-d',strtotime("+1 month", strtotime($a)));
-                    $d = date('d',strtotime("+1 month", strtotime($a)));
-                    $finalstart .= ','."(
+                for ($i = 1; $i < $howWeek; $i++) {
+                    $a = date('Y-m-d', strtotime("+1 month", strtotime($a)));
+                    $d = date('d', strtotime($a));
+                    $finalstart .= ',' . "(
                         '{$description}', '{$employee}', '$a $eventStart',
                         '$a $eventEnd', '{$isLong}', '{$room}', '{$dateCreateEvent}',
                         '{$d}','$dateCreateEvent $description'
@@ -170,9 +168,10 @@ class EventController extends Controller
         //$result = false;
         $employees = $this->employee->getEmployeeList();
         $event = $this->event->getEventById($_GET['id']);
+        $changeAll = isset($_POST['toAll'])? 1: false;
 
         if (isset($_POST['delete'])) {
-            if($_POST['mark_long']) {
+            if ($changeAll === 1 ) {
                 $markLong = $_POST['mark_long'];
                 $this->event->deleteLongEvent($markLong);
                 $_SESSION['result'] = "The long Event  has been removed<br>";
@@ -186,16 +185,23 @@ class EventController extends Controller
         }
         if (isset($_POST['update'])) {
             $sanitized = $this->sanitizeArray($_POST);
-            $start= $sanitized['start'];
-            $startEvent = substr($sanitized['start_event'],0,11).$start;
+            $start = $sanitized['start'];
+            $startEvent = substr($sanitized['start_event'], 0, 11) . $start;
             $end = $sanitized['end'];
-            $endEvent = substr($sanitized['end_event'],0,11).$end;
+            $endEvent = substr($sanitized['end_event'], 0, 11) . $end;
             $description = $sanitized['description'];
             $id = $sanitized['id'];
+            $changeAll = isset($_POST['toAll'])? 1: false;
             $name = $sanitized['employee'];
-            $this->event->changeEvent($startEvent,$endEvent,$description,$id,$name);
-            $_SESSION['result'] = "The Event<b>{$start}</b> - <b>{$end}</b> has been update<br>
+            if ($changeAll === 1) {
+                $markLong = $_POST['mark_long'];
+                $this->event->changeLongEvent($startEvent, $endEvent, $description, $id, $name, $markLong);
+                $_SESSION['result'] = "The long Event  has been update<br>";
+            } else {
+                $this->event->changeEvent($startEvent, $endEvent, $description, $id, $name);
+                $_SESSION['result'] = "The Event<b>{$start}</b> - <b>{$end}</b> has been update<br>
                             The text for this event is :  <i>{$description}</i>";
+            }
         }
 
         echo $this->render(DIR . "rooms/change.php", [

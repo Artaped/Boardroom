@@ -112,6 +112,10 @@ class Event extends Model
         return $result;
     }
 
+    /**
+     * @param String $string
+     * @return false|\PDOStatement
+     */
     public function addLongEvent(String $string)
     {
         $query = "INSERT INTO appointmens(notes_event , employee , start_event , end_event ,long_event,room_event,create_date ,mark, mark_long) 
@@ -120,6 +124,14 @@ class Event extends Model
         return $result;
     }
 
+    /**
+     * @param $startEvent
+     * @param $endEvent
+     * @param $description
+     * @param $id
+     * @param $name
+     * @return false|\PDOStatement
+     */
     public function changeEvent($startEvent, $endEvent, $description, $id, $name)
     {
         $sql = "UPDATE appointmens SET start_event = '$startEvent',
@@ -127,5 +139,22 @@ class Event extends Model
         $result = $this->db->query($sql);
         return $result;
     }
+
+    /**
+     * @param $startEvent
+     * @param $endEvent
+     * @param $description
+     * @param $id
+     * @param $name
+     * @return false|\PDOStatement
+     */
+    public function changeLongEvent($startEvent, $endEvent, $description, $id, $name, $markLong)
+    {
+        $sql = "UPDATE appointmens SET start_event = '$startEvent',
+                       end_event = '$endEvent', notes_event = '$description', employee = '$name' WHERE mark_long = '$markLong'";
+        $result = $this->db->query($sql);
+        return $result;
+    }
+
 
 }
