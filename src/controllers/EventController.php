@@ -135,7 +135,7 @@ class EventController extends Controller
             if ($errors == false && $isLong === 1) {
                 $this->event->addLongEvent($finalstart);
                 $_SESSION['result'] = "The long Event has been added<br>
-                            The text for this event is :  <i>{$description}</i>";
+                            The text for this event is :  <i>".stripcslashes($description)."</i>";
             }
 
             if ($errors == false && $isLong != 1) {
@@ -145,7 +145,7 @@ class EventController extends Controller
                 );
                 $_SESSION['result'] = "The Event<b>{$startHour}:{$sanitized['start_minute']}
                             </b> - <b>{$endHour}:{$sanitized['end_minute']}</b> has been added<br>
-                            The text for this event is :  <i>{$description}</i>";
+                            The text for this event is :  <i>".stripcslashes($description)."</i>";
             }
             $_SESSION['errors'] = $errors;
         }

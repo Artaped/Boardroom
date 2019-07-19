@@ -120,7 +120,6 @@ class Event extends Model
     {
         $query = "INSERT INTO appointmens(notes_event , employee , start_event , end_event ,long_event,room_event,create_date ,mark, mark_long) 
                     VALUES $string";
-
         $result = $this->db->query($query);
         return $result;
     }
