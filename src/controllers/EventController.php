@@ -45,9 +45,9 @@ class EventController extends Controller
             $errors = false;
             $sanitized = $this->sanitizeArray($_POST);
             $room = (int)$sanitized['room'];
-            $employee = $sanitized['employee'];
+            $employee = addslashes($sanitized['employee']);
             $isLong = (int)$sanitized['long'];
-            $description = $sanitized['description'];
+            $description = addslashes($sanitized['description']);
             $eventDate = "20{$sanitized['year']}-{$sanitized['month']}-{$sanitized['day']}";
             //start
             $startHour = $sanitized['start_hour'];
@@ -189,10 +189,10 @@ class EventController extends Controller
             $startEvent = substr($sanitized['start_event'], 0, 11) . $start;
             $end = $sanitized['end'];
             $endEvent = substr($sanitized['end_event'], 0, 11) . $end;
-            $description = $sanitized['description'];
+            $description = addslashes($sanitized['description']);
             $id = $sanitized['id'];
             $changeAll = isset($_POST['toAll'])? 1: false;
-            $name = $sanitized['employee'];
+            $name = addslashes($sanitized['employee']);
             if ($changeAll === 1) {
                 $markLong = $_POST['mark_long'];
                 $this->event->changeLongEvent($startEvent, $endEvent, $description, $id, $name, $markLong);
