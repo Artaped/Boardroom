@@ -102,11 +102,22 @@ class EventController extends Controller
                 for ($i = 1; $i < $howWeek; $i++) {
                     $a = date('Y-m-d', strtotime("+7 day", strtotime($a)));
                     $d = date('d', strtotime($a));
-                    $finalstart .= ',' . "(
+                    //checkData
+                    $eventLongStart = $a . ' ' . $eventStart;
+                    $eventLongEnd = $a . ' ' . $eventEnd;
+                    $start = $this->event->checkDate("$eventLongStart", "start_event", $room);
+                    $end = $this->event->checkDate("$eventLongEnd", "end_event", $room);
+                    if ($start || $end) {
+                        $errors[] = "time is busy, try another";
+                    }
+                    if ($errors == false) {
+                        $finalstart .= ',' . "(
                         '{$description}', '{$employee}', '$a $eventStart',
                         '$a $eventEnd', '{$isLong}', '{$room}', '{$dateCreateEvent}
                         ', '{$d}','$dateCreateEvent $description'
                     )";
+                    }
+
                 }
 
             } elseif ($isLong > 0 && $howLong === "bw") {
@@ -124,18 +135,28 @@ class EventController extends Controller
                 for ($i = 1; $i < $howWeek; $i++) {
                     $a = date('Y-m-d', strtotime("+1 month", strtotime($a)));
                     $d = date('d', strtotime($a));
-                    $finalstart .= ',' . "(
+                    //checkData
+                    $eventLongStart = $a . ' ' . $eventStart;
+                    $eventLongEnd = $a . ' ' . $eventEnd;
+                    $start = $this->event->checkDate("$eventLongStart", "start_event", $room);
+                    $end = $this->event->checkDate("$eventLongEnd", "end_event", $room);
+                    if ($start || $end) {
+                        $errors[] = "time is busy, try another";
+                    }
+                    if ($errors == false) {
+                        $finalstart .= ',' . "(
                         '{$description}', '{$employee}', '$a $eventStart',
-                        '$a $eventEnd', '{$isLong}', '{$room}', '{$dateCreateEvent}',
-                        '{$d}','$dateCreateEvent $description'
+                        '$a $eventEnd', '{$isLong}', '{$room}', '{$dateCreateEvent}
+                        ', '{$d}','$dateCreateEvent $description'
                     )";
+                    }
                 }
 
             }
             if ($errors == false && $isLong === 1) {
                 $this->event->addLongEvent($finalstart);
                 $_SESSION['result'] = "The long Event has been added<br>
-                            The text for this event is :  <i>".stripcslashes($description)."</i>";
+                            The text for this event is :  <i>" . stripcslashes($description) . "</i>";
             }
 
             if ($errors == false && $isLong != 1) {
@@ -145,7 +166,7 @@ class EventController extends Controller
                 );
                 $_SESSION['result'] = "The Event<b>{$startHour}:{$sanitized['start_minute']}
                             </b> - <b>{$endHour}:{$sanitized['end_minute']}</b> has been added<br>
-                            The text for this event is :  <i>".stripcslashes($description)."</i>";
+                            The text for this event is :  <i>" . stripcslashes($description) . "</i>";
             }
             $_SESSION['errors'] = $errors;
         }
@@ -168,10 +189,10 @@ class EventController extends Controller
         //$result = false;
         $employees = $this->employee->getEmployeeList();
         $event = $this->event->getEventById($_GET['id']);
-        $changeAll = isset($_POST['toAll'])? 1: false;
+        $changeAll = isset($_POST['toAll']) ? 1 : false;
 
         if (isset($_POST['delete'])) {
-            if ($changeAll === 1 ) {
+            if ($changeAll === 1) {
                 $markLong = $_POST['mark_long'];
                 $this->event->deleteLongEvent($markLong);
                 $_SESSION['result'] = "The long Event  has been removed<br>";
@@ -191,7 +212,7 @@ class EventController extends Controller
             $endEvent = substr($sanitized['end_event'], 0, 11) . $end;
             $description = addslashes($sanitized['description']);
             $id = $sanitized['id'];
-            $changeAll = isset($_POST['toAll'])? 1: false;
+            $changeAll = isset($_POST['toAll']) ? 1 : false;
             $name = addslashes($sanitized['employee']);
             if ($changeAll === 1) {
                 $markLong = $_POST['mark_long'];
